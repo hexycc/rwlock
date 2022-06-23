@@ -2,8 +2,8 @@ package rwlock
 
 import (
 	"crypto/tls"
-	"github.com/go-redis/redis"
-	"github.com/wangfeiso/rwlock/client"
+	"github.com/go-redis/redis/v9"
+	"github.com/hexycc/rwlock/client"
 	"time"
 )
 

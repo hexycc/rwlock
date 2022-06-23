@@ -1,10 +1,11 @@
 package client
 
 import (
+	"context"
 	"encoding/json"
-	"github.com/go-redis/redis"
-	"github.com/wangfeiso/rwlock/lua"
-	"github.com/wangfeiso/rwlock/tool"
+	"github.com/go-redis/redis/v9"
+	"github.com/hexycc/rwlock/lua"
+	"github.com/hexycc/rwlock/tool"
 	"strconv"
 	"time"
 )
@@ -26,7 +27,7 @@ var shaHashID string
 
 func Init(opt *redis.Options) error {
 	Redis = redis.NewClient(opt)
-	if _, err := Redis.Ping().Result(); err != nil {
+	if _, err := Redis.Ping(context.Background()).Result(); err != nil {
 		return err
 	}
 	opts = opt
@@ -39,7 +40,7 @@ func Init(opt *redis.Options) error {
 
 // 加载 Lua脚本
 func LoadLua() error {
-	hashID, err := Redis.ScriptLoad(lua.ScriptContent).Result()
+	hashID, err := Redis.ScriptLoad(context.Background(),lua.ScriptContent).Result()
 	if err != nil {
 		return err
 	}
@@ -178,11 +179,11 @@ func sendLock(shaHashID, key string, uniqID, lockCmd string, expireTime int64) (
 	var err error
 	switch lockCmd {
 	case LockCmd:
-		ret, err = Redis.EvalSha(shaHashID, []string{key, lockCmd}, []string{uniqID, strconv.Itoa(int(expireTime))}).Result()
+		ret, err = Redis.EvalSha(context.Background(),shaHashID, []string{key, lockCmd}, []string{uniqID, strconv.Itoa(int(expireTime))}).Result()
 	case UnlockCmd:
-		ret, err = Redis.EvalSha(shaHashID, []string{key, lockCmd}, []string{uniqID}).Result()
+		ret, err = Redis.EvalSha(context.Background(),shaHashID, []string{key, lockCmd}, []string{uniqID}).Result()
 	case RLockCmd, RUnlockCmd:
-		ret, err = Redis.EvalSha(shaHashID, []string{key, lockCmd}, []string{}).Result()
+		ret, err = Redis.EvalSha(context.Background(),shaHashID, []string{key, lockCmd}, []string{}).Result()
 	}
 
 	if err != nil {

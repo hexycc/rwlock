@@ -1,8 +1,8 @@
 package rwlock
 
 import (
-	"github.com/wangfeiso/rwlock/client"
-	"github.com/wangfeiso/rwlock/tool"
+	"github.com/hexycc/rwlock/client"
+	"github.com/hexycc/rwlock/tool"
 )
 
 type RWLock struct {

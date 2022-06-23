@@ -3,7 +3,7 @@
 ### 使用方式
 
 ``` 
-go get github.com/wangfeiso/rwlock
+go get github.com/hexycc/rwlock
 ```
 ### 特性说明
 
