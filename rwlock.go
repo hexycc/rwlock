@@ -12,11 +12,14 @@ type RWLock struct {
 	expire    int64
 }
 
-func New(key string) *RWLock {
+func New(key string,expire int64) *RWLock {
+	if expire < 1{
+		expire = 10
+	}
 	return &RWLock{
 		lockKey: key,
 		uniqID:  tool.GetUUID(),
-		expire:  10,
+		expire:  expire,
 	}
 }
 
